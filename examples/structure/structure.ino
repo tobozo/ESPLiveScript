@@ -1,6 +1,6 @@
 #include "ESPLiveScript.h"
 
-string script="\
+string script = "\
 Object new_type\n\
 {\n\
   float f;\n\
@@ -24,21 +24,17 @@ void main()\n\
  var.display(23)\n\
 }";
 
-
 void setup() {
   // put your setup code here, to run once:
-Serial.begin(115200);
+  Serial.begin(115200);
 
-Parser p;
-Executable exec=p.parseScript(&script);
-if(exec.isExeExists())
-{
- exec.execute("main");
-}
-
+  Parser p;
+  Executable exec = p.parseScript(&script);
+  if (exec.isExeExists()) {
+    exec.execute("main");
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
 }

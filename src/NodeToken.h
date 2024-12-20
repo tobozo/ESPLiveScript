@@ -3117,12 +3117,12 @@ void _visitcallFunctionNode(NodeToken *nd) {
               // bufferText->sp.push(bufferText->get());
 
               bufferText->addAfter(
-                  sav,
-                  string_format("l32r a%d,@_stack_%s", save,
-                                nd->getTokenText())); // point_regnum
-                                                      // bufferText->addAfter(sav,
-                                                      // string_format("l32r
-                                                      // a%d,@_stack",save));
+                  sav, string_format(
+                           "l32r a%d,@_stack_%s", save,
+                           nd->getTokenText())); // point_regnum
+                                                 // bufferText->addAfter(sav,
+                                                 // string_format("l32r
+                                                 // a%d,@_stack",save));
             }
           } else {
             // sav = bufferText->get();
@@ -3407,11 +3407,12 @@ void _visitinputArgumentsNode(NodeToken *nd) {
     return;
   int sav = 9;
   if (nd->children.size() >= _TRIGGER) { // point_regnum;
-    bufferText->addAfterNoDouble(
-        string_format("l32r a%d,@_stack_%s", sav,
-                      nd->parent->getTokenText())); // point_regnum
-                                                    // bufferText->addAfterNoDouble(string_format("l32r
-                                                    // a%d,@_stack", sav));
+    bufferText->addAfterNoDouble(string_format(
+        "l32r a%d,@_stack_%s", sav,
+        nd->parent
+            ->getTokenText())); // point_regnum
+                                // bufferText->addAfterNoDouble(string_format("l32r
+                                // a%d,@_stack", sav));
     for (int i = 0; i < nd->children.size(); i++) {
       // printf("ee\r\n");
       int start = nd->getChildAtPos(i)->stack_pos;
