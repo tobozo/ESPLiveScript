@@ -1,14 +1,24 @@
-on: [pull_request, push, workflow_dispatch]
+name: Continuous Integration
+
+# This action works with pull requests and pushes
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
 jobs:
-  check-formatting:
+  prettier:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: per1234/artistic-style-action@v1
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          name-patterns: |
-            - '*.cpp'
-            - '*.h'
-          target-paths: |
-            - 'src/'
-            - 'examples/'
+          ref: ${{ github.head_ref }}
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          prettier_options: --write **/*.{c,h,cpp,hpp}
+          
