@@ -1,22 +1,14 @@
-name: Format
-on:
-  pull_request:
-    branches: [main]
-  workflow_dispatch:
+on: [pull_request, push, workflow_dispatch]
 jobs:
-  format:
+  check-formatting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: per1234/artistic-style-action@v1
         with:
-          ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-      - run: npm ci
-      - run: npm run format
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Apply formatting changes
-          branch: ${{ github.head_ref }}
+          name-patterns: |
+            - '*.cpp'
+            - '*.h'
+          target-paths: |
+            - 'src/'
+            - 'examples/'
