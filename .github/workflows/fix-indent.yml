@@ -1,14 +1,24 @@
-name: clang-format Check
-on: [push, pull_request,workflow_dispatch]
+name: Run clang-format Linter
+
+on: [push,workflow_dispatch]
+
 jobs:
-  formatting-check:
-    name: Formatting Check
+  build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Run clang-format style check for C/C++/Protobuf programs.
-      uses: jidicula/clang-format-action@v4.14.0
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.18.1
       with:
-        clang-format-version: '13'
-        check-path: 'src'
-        fallback-style: 'Mozilla' # optional
+        source: '.'
+        exclude: './lib'
+        extensions: 'h,cpp,c'
+        clangFormatVersion: 16
+        inplace: True
+    - uses: EndBug/add-and-commit@v9
+      with:
+        # author_name: Clang Robot
+        # author_email: robot@example.com
+        message: 'Committing clang-format changes'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
