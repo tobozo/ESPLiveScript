@@ -1,15 +1,15 @@
+#include "memory.h"
+#include <list>
 #include <regex.h>
 #include <stdio.h>
-#include <list>
 #include <string>
-#include "memory.h"
 #include <vector>
 
 #pragma once
 using namespace std;
 // #include "asm_parser.h"
-#include "string_function.h"
 #include "asm_struct_enum.h"
+#include "string_function.h"
 
 #define EOF_TEXT 0
 
@@ -19,59 +19,58 @@ template <typename... Args>
 std::string string_format(const std::string &format, Args... args)
 
 {
-    int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1; // Extra space for '\0'
-    if (size_s <= 0)
+    int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1; //
+Extra space for '\0' if (size_s <= 0)
     {
         throw std::runtime_error("Error during formatting.");
     }
     auto size = static_cast<size_t>(size_s);
     std::unique_ptr<char[]> buf(new char[size]);
     std::snprintf(buf.get(), size, format.c_str(), args...);
-    return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+    return std::string(buf.get(), buf.get() + size - 1); // We don't want the
+'\0' inside
 }
 */
 #endif
 
-enum varTypeEnum
-{
-    __none__,
-    __uint8_t__,
-    __uint16_t__,
-    __uint32_t__,
-    __int__,
-    __s_int__,
-    __float__,
-    __void__,
-    __CRGB__,
-    __CRGBW__,
-    __char__,
-    __Args__,
-    __bool__,
-    __userDefined__,
-    __unknown__
+enum varTypeEnum {
+  __none__,
+  __uint8_t__,
+  __uint16_t__,
+  __uint32_t__,
+  __int__,
+  __s_int__,
+  __float__,
+  __void__,
+  __CRGB__,
+  __CRGBW__,
+  __char__,
+  __Args__,
+  __bool__,
+  __userDefined__,
+  __unknown__
 };
 
-struct varType
-{
-    varTypeEnum _varType;
-    string varName;
-    uint8_t _varSize;
-    asmInstruction load[20];
-    asmInstruction store[20];
-    string membersNames[10];
-    uint8_t starts[20];
+struct varType {
+  varTypeEnum _varType;
+  string varName;
+  uint8_t _varSize;
+  asmInstruction load[20];
+  asmInstruction store[20];
+  string membersNames[10];
+  uint8_t starts[20];
 
-    // asmInstruction add;
-    // asmInstruction mul;
-    // asmInstruction div;
-    // string reg_name;
+  // asmInstruction add;
+  // asmInstruction mul;
+  // asmInstruction div;
+  // string reg_name;
 
-    uint8_t memberSize[20];
-    // string vnames[20];
-    varTypeEnum types[20];
-    uint8_t sizes[20];
-    uint8_t size;
-    uint8_t total_size;
+  uint8_t memberSize[20];
+  // string vnames[20];
+  varTypeEnum types[20];
+  uint8_t sizes[20];
+  uint8_t size;
+  uint8_t total_size;
 };
 varType usded;
 
@@ -79,21 +78,10 @@ vector<varType> _userDefinedTypes;
 varType __v;
 string varTypeEnumNames[] = {
 #ifdef __TEST_DEBUG
-    "__none__",
-    "__unit8_t__",
-    "__unit16_t__",
-    "__unit32_t__",
-    "__int__",
-    "__s_int__",
-    "__float__",
-    "__void__",
-    "__CRGB__",
-    "__CRGBW__",
-    "__char__",
-    "__Args__",
-    "__bool__",
-    "__userDefined__",
-    "__unknown__"
+    "__none__", "__unit8_t__",     "__unit16_t__", "__unit32_t__",
+    "__int__",  "__s_int__",       "__float__",    "__void__",
+    "__CRGB__", "__CRGBW__",       "__char__",     "__Args__",
+    "__bool__", "__userDefined__", "__unknown__"
 #endif
 
 };
@@ -284,168 +272,126 @@ varType _varTypes[] = {
 
 string keywordTypeNames[] = {
 #ifdef __TEST_DEBUG
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordVarType",
-    "KeywordExternalVar",
-    "KeywordFor",
-    "KeywordIf",
-    "KeywordThen",
-    "KeywordElse",
-    "KeywordWhile",
-    "KeywordReturn",
-    "KeywordImport",
-    "KeywordFrom",
-    "KeywordASM",
-    "KeywordDefine",
-    "KeywordSafeMode",
-    "KeywordHeader",
-    "KeywordContent",
+    "KeywordVarType",     "KeywordVarType", "KeywordVarType", "KeywordVarType",
+    "KeywordVarType",     "KeywordVarType", "KeywordVarType", "KeywordVarType",
+    "KeywordVarType",     "KeywordVarType", "KeywordVarType", "KeywordVarType",
+    "KeywordExternalVar", "KeywordFor",     "KeywordIf",      "KeywordThen",
+    "KeywordElse",        "KeywordWhile",   "KeywordReturn",  "KeywordImport",
+    "KeywordFrom",        "KeywordASM",     "KeywordDefine",  "KeywordSafeMode",
+    "KeywordHeader",      "KeywordContent",
 #endif
 
 };
 
 #define nb_keywords 36
 #define nb_typeVariables 13
-string keyword_array[nb_keywords] =
-    {"none", "uint8_t", "uint16_t", "uint32_t", "int", "s_int", "float", "void", "CRGB",
-     "CRGBW", "char", "Args", "bool", "external", "for", "if", "then", "else", "while", "return",
-     "import", "from", "__ASM__",
-     "define", "safe_mode", "_header_", "_content_", "and", "or", "continue",
-     "break", "fabs", "abs", "save_reg",
-     "save_reg_abs", "struct"};
+string keyword_array[nb_keywords] = {
+    "none",     "uint8_t",   "uint16_t", "uint32_t", "int",
+    "s_int",    "float",     "void",     "CRGB",     "CRGBW",
+    "char",     "Args",      "bool",     "external", "for",
+    "if",       "then",      "else",     "while",    "return",
+    "import",   "from",      "__ASM__",  "define",   "safe_mode",
+    "_header_", "_content_", "and",      "or",       "continue",
+    "break",    "fabs",      "abs",      "save_reg", "save_reg_abs",
+    "struct"};
 
 bool __isBlockComment = false;
-enum tokenType
-{
-    TokenNumber,
-    TokenAddition,
-    TokenStar,
-    TokenSubstraction,
-    TokenOpenParenthesis,
-    TokenCloseParenthesis,
-    TokenOpenBracket,
-    TokenCloseBracket,
-    TokenOpenCurlyBracket,
-    TokenCloseCurlyBracket,
-    TokenEqual,
-    TokenDoubleEqual,
-    TokenIdentifier,
-    TokenSemicolon,
-    TokenUnknown,
-    TokenSpace,
-    TokenNewline,
-    TokenEndOfFile,
-    TokenSlash,
-    TokenKeyword,
-    TokenString,
-    TokenExternal,
-    TokenComma,
-    TokenLessThan,
-    TokenPlusPlus,
-    TokenMinusMinus,
-    TokenModulo,
-    TokenLessOrEqualThan,
-    TokenMoreThan,
-    TokenMoreOrEqualThan,
-    TokenNotEqual,
-    TokenNot,
-    TokenFunction,
-    TokenUppersand,
-    TokenDiese,
-    TokenLineComment,
-    TokenStartBlockComment,
-    TokenEndBlockComment,
-    TokenNegation,
-    TokenShiftLeft,
-    TokenShiftRight,
-    TokenKeywordVarType,
-    TokenKeywordExternalVar,
-    TokenKeywordFor,
-    TokenKeywordIf,
-    TokenKeywordThen,
-    TokenKeywordElse,
-    TokenKeywordWhile,
-    TokenKeywordReturn,
-    TokenKeywordImport,
-    TokenKeywordFrom,
-    TokenKeywordASM,
-    TokenKeywordDefine,
-    TokenKeywordSafeMode,
-    TokenKeywordHeader,
-    TokenKeywordContent,
-    TokenKeywordAnd,
-    TokenKeywordOr,
-    TokenPower,
-    TokenKeywordContinue,
-    TokenKeywordBreak,
-    TokenKeywordFabs,
-    TokenKeywordAbs,
-    TokenKeywordSaveReg,
-    TokenKeywordSaveRegAbs,
-    TokenKeywordStruct,
-    TokenUserDefinedName,
-    TokenUserDefinedVariable,
-    TokenMember,
-    TokenUserDefinedVariableMember,
-    TokenUserDefinedVariableMemberFunction,
-    TokenDoubleUppersand,
-    TokenDoubleOr,
-    TokenQuestionMark,
-    TokenColon,
-    TokenPlusEqual,
-    TokenMinusEqual,
-    TokenStarEqual,
-    TokenSlashEqual
+enum tokenType {
+  TokenNumber,
+  TokenAddition,
+  TokenStar,
+  TokenSubstraction,
+  TokenOpenParenthesis,
+  TokenCloseParenthesis,
+  TokenOpenBracket,
+  TokenCloseBracket,
+  TokenOpenCurlyBracket,
+  TokenCloseCurlyBracket,
+  TokenEqual,
+  TokenDoubleEqual,
+  TokenIdentifier,
+  TokenSemicolon,
+  TokenUnknown,
+  TokenSpace,
+  TokenNewline,
+  TokenEndOfFile,
+  TokenSlash,
+  TokenKeyword,
+  TokenString,
+  TokenExternal,
+  TokenComma,
+  TokenLessThan,
+  TokenPlusPlus,
+  TokenMinusMinus,
+  TokenModulo,
+  TokenLessOrEqualThan,
+  TokenMoreThan,
+  TokenMoreOrEqualThan,
+  TokenNotEqual,
+  TokenNot,
+  TokenFunction,
+  TokenUppersand,
+  TokenDiese,
+  TokenLineComment,
+  TokenStartBlockComment,
+  TokenEndBlockComment,
+  TokenNegation,
+  TokenShiftLeft,
+  TokenShiftRight,
+  TokenKeywordVarType,
+  TokenKeywordExternalVar,
+  TokenKeywordFor,
+  TokenKeywordIf,
+  TokenKeywordThen,
+  TokenKeywordElse,
+  TokenKeywordWhile,
+  TokenKeywordReturn,
+  TokenKeywordImport,
+  TokenKeywordFrom,
+  TokenKeywordASM,
+  TokenKeywordDefine,
+  TokenKeywordSafeMode,
+  TokenKeywordHeader,
+  TokenKeywordContent,
+  TokenKeywordAnd,
+  TokenKeywordOr,
+  TokenPower,
+  TokenKeywordContinue,
+  TokenKeywordBreak,
+  TokenKeywordFabs,
+  TokenKeywordAbs,
+  TokenKeywordSaveReg,
+  TokenKeywordSaveRegAbs,
+  TokenKeywordStruct,
+  TokenUserDefinedName,
+  TokenUserDefinedVariable,
+  TokenMember,
+  TokenUserDefinedVariableMember,
+  TokenUserDefinedVariableMemberFunction,
+  TokenDoubleUppersand,
+  TokenDoubleOr,
+  TokenQuestionMark,
+  TokenColon,
+  TokenPlusEqual,
+  TokenMinusEqual,
+  TokenStarEqual,
+  TokenSlashEqual
 
 };
 
 tokenType __keywordTypes[] = {
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordVarType,
-    TokenKeywordExternalVar,
-    TokenKeywordFor,
-    TokenKeywordIf,
-    TokenKeywordThen,
-    TokenKeywordElse,
-    TokenKeywordWhile,
-    TokenKeywordReturn,
-    TokenKeywordImport,
-    TokenKeywordFrom,
-    TokenKeywordASM,
-    TokenKeywordDefine,
-    TokenKeywordSafeMode,
-    TokenKeywordHeader,
-    TokenKeywordContent,
-    TokenKeywordAnd,
-    TokenKeywordOr,
-    TokenKeywordContinue,
-    TokenKeywordBreak,
-    TokenKeywordFabs,
-    TokenKeywordAbs,
-    TokenKeywordSaveReg,
-    TokenKeywordSaveRegAbs,
-    TokenKeywordStruct,
+    TokenKeywordVarType,  TokenKeywordVarType,     TokenKeywordVarType,
+    TokenKeywordVarType,  TokenKeywordVarType,     TokenKeywordVarType,
+    TokenKeywordVarType,  TokenKeywordVarType,     TokenKeywordVarType,
+    TokenKeywordVarType,  TokenKeywordVarType,     TokenKeywordVarType,
+    TokenKeywordVarType,  TokenKeywordExternalVar, TokenKeywordFor,
+    TokenKeywordIf,       TokenKeywordThen,        TokenKeywordElse,
+    TokenKeywordWhile,    TokenKeywordReturn,      TokenKeywordImport,
+    TokenKeywordFrom,     TokenKeywordASM,         TokenKeywordDefine,
+    TokenKeywordSafeMode, TokenKeywordHeader,      TokenKeywordContent,
+    TokenKeywordAnd,      TokenKeywordOr,          TokenKeywordContinue,
+    TokenKeywordBreak,    TokenKeywordFabs,        TokenKeywordAbs,
+    TokenKeywordSaveReg,  TokenKeywordSaveRegAbs,  TokenKeywordStruct,
 
 };
 
@@ -534,41 +480,35 @@ string tokenNames[] = {
 #endif
 };
 
-typedef struct
-{
-    string name;
-    string content;
-    string hh;
+typedef struct {
+  string name;
+  string content;
+  string hh;
 } _define;
 
 vector<_define> define_list;
 
-const char *getDefine(string name)
-{
-    for (vector<_define>::iterator it = define_list.begin();
-         it != define_list.end(); ++it)
-    {
-        if ((*it).name.compare(name) == 0)
-        {
-            // printf("one rrent %s\n",(*it).content.c_str());
-            return (*it).content.c_str();
-        }
+const char *getDefine(string name) {
+  for (vector<_define>::iterator it = define_list.begin();
+       it != define_list.end(); ++it) {
+    if ((*it).name.compare(name) == 0) {
+      // printf("one rrent %s\n",(*it).content.c_str());
+      return (*it).content.c_str();
     }
-    return NULL;
+  }
+  return NULL;
 }
 
-void deleteDefine()
-{
-    for (vector<_define>::iterator it = define_list.begin();
-         it != define_list.end(); ++it)
-    {
-        (*it).content.clear();
-        (*it).content.shrink_to_fit();
-        (*it).name.clear();
-        (*it).name.shrink_to_fit();
-    }
-    define_list.clear();
-    define_list.shrink_to_fit();
+void deleteDefine() {
+  for (vector<_define>::iterator it = define_list.begin();
+       it != define_list.end(); ++it) {
+    (*it).content.clear();
+    (*it).content.shrink_to_fit();
+    (*it).name.clear();
+    (*it).name.shrink_to_fit();
+  }
+  define_list.clear();
+  define_list.shrink_to_fit();
 }
 
 #ifdef __CONSOLE_ESP32
@@ -676,231 +616,175 @@ const char *KeywordTypeFormat[] =
 };
 */
 #endif
-typedef struct
-{
-    // switch to uin8_t
-    tokenType type;
-    varType *_vartype;
+typedef struct {
+  // switch to uin8_t
+  tokenType type;
+  varType *_vartype;
 
-    // varTypeEnum _varType;
+  // varTypeEnum _varType;
 
-    // needs to find a solution for this maybe a pointer to list string et on ne garde que les identifiers ...
+  // needs to find a solution for this maybe a pointer to list string et on ne
+  // garde que les identifiers ...
 
-    string text;
-    uint16_t line;
+  string text;
+  uint16_t line;
 
-    // switch to uin8_t unn ligne ne fera pas plus de 256 caracteres
-    uint8_t pos;
+  // switch to uin8_t unn ligne ne fera pas plus de 256 caracteres
+  uint8_t pos;
 
-    // switch to uin8_t
-    // KeywordType _keyword;
+  // switch to uin8_t
+  // KeywordType _keyword;
 
-    // possible sizee  1+4+4+1+1+4=15 au lieu de 44 ...
+  // possible sizee  1+4+4+1+1+4=15 au lieu de 44 ...
 
 } token;
 
 vector<char *> texts;
 
-class Script
-{
+class Script {
 public:
-    Script()
-    {
+  Script() { position = -1; }
+  void init() {
+    it = script.begin();
+    position = -1;
+  }
+  void addContent(char *str) { script.push_back(str); }
+  void clear() {
+    script.clear();
+    script.shrink_to_fit();
+    position = -1;
+  }
 
-        position = -1;
-    }
-    void init()
-    {
-        it = script.begin();
-        position = -1;
-    }
-    void addContent(char *str)
-    {
-        script.push_back(str);
-    }
-    void clear()
-    {
-        script.clear();
-        script.shrink_to_fit();
-        position = -1;
-    }
+  char nextChar() {
 
-    char nextChar()
-    {
+    if ((*it)[position + 1] != 0) {
+      position++;
+      return (*it)[position];
+    } else {
 
-        if ((*it)[position + 1] != 0)
-        {
-            position++;
-            return (*it)[position];
+      if (next(it) == script.end()) {
+
+        position++;
+        return EOF_TEXT;
+      } else {
+        it = next(it);
+        position = 0;
+        return (*it)[position];
+      }
+    }
+  }
+
+  char currentChar() {
+
+    if ((*it)[position] != 0) {
+
+      return (*it)[position];
+    } else {
+
+      return EOF_TEXT;
+    }
+  }
+
+  char previousChar() {
+
+    if ((position - 1) >= 0) {
+      position--;
+      return (*it)[position];
+    } else {
+      if (it != script.begin()) {
+
+        it--;
+        position = 0;
+        while ((*it)[position] != 0) {
+          position++;
         }
-        else
-        {
-
-            if (next(it) == script.end())
-            {
-
-                position++;
-                return EOF_TEXT;
-            }
-            else
-            {
-                it = next(it);
-                position = 0;
-                return (*it)[position];
-            }
-        }
+        position--;
+        return (*it)[position];
+      } else {
+        position = 0;
+        return (*it)[0];
+      }
     }
+  }
 
-    char currentChar()
-    {
+  void insert(char *toInsert) {
 
-        if ((*it)[position] != 0)
-        {
-
-            return (*it)[position];
-        }
-        else
-        {
-
-            return EOF_TEXT;
-        }
+    char *_cur = &(*it)[position];
+    char *_next = &(*it)[position + 1];
+    it++;
+    if (*_next != 0 and *_cur != 0)
+      it = script.insert(it, _next);
+    it = script.insert(it, toInsert);
+    position = -1;
+  }
+  void insertAtEnd(char *toInsert) {
+    int i = 0;
+    int res = -1;
+    for (vector<char *>::iterator _it = script.begin(); _it != script.end();
+         _it++) {
+      if (it == _it) {
+        res = i;
+      } else {
+        i++;
+      }
     }
-
-    char previousChar()
-    {
-
-        if ((position - 1) >= 0)
-        {
-            position--;
-            return (*it)[position];
-        }
-        else
-        {
-            if (it != script.begin())
-            {
-
-                it--;
-                position = 0;
-                while ((*it)[position] != 0)
-                {
-                    position++;
-                }
-                position--;
-                return (*it)[position];
-            }
-            else
-            {
-                position = 0;
-                return (*it)[0];
-            }
-        }
+    script.insert(script.end(), toInsert);
+    it = script.begin();
+    while (res > 0) {
+      it++;
+      res--;
     }
-
-    void insert(char *toInsert)
-    {
-
-        char *_cur = &(*it)[position];
-        char *_next = &(*it)[position + 1];
-        it++;
-        if (*_next != 0 and *_cur != 0)
-            it = script.insert(it, _next);
-        it = script.insert(it, toInsert);
-        position = -1;
-    }
-    void insertAtEnd(char *toInsert)
-    {
-        int i = 0;
-        int res = -1;
-        for (vector<char *>::iterator _it = script.begin(); _it != script.end(); _it++)
-        {
-            if (it == _it)
-            {
-                res = i;
-            }
-            else
-            {
-                i++;
-            }
-        }
-        script.insert(script.end(), toInsert);
-        it = script.begin();
-        while (res > 0)
-        {
-            it++;
-            res--;
-        }
-    }
+  }
 
 private:
-    // string * script;
-    int position;
+  // string * script;
+  int position;
 
-    vector<char *> script;
-    vector<char *>::iterator it;
+  vector<char *> script;
+  vector<char *>::iterator it;
 };
 
-class Token
-{
+class Token {
 
 public:
-    Token()
-    {
-        type = (int)TokenUnknown;
-        _vartype = EOF_VARTYPE;
-    }
+  Token() {
+    type = (int)TokenUnknown;
+    _vartype = EOF_VARTYPE;
+  }
 
-    Token(tokenType h)
-    {
-        type = (int)h;
-    }
-    Token(tokenType _type, int __vartype, int _line)
-    {
-        type = (int)_type;
-        _vartype = __vartype;
-        line = _line;
-    }
-    Token(tokenType _type, int __vartype)
-    {
-        type = (int)_type;
-        _vartype = __vartype;
-    }
-    tokenType getType()
-    {
-        return (tokenType)type;
-    }
-    void setType(tokenType _type)
-    {
-        type = (int)_type;
-    }
-    void clean()
-    {
-        line = 0;
-        type = 0;
-        _vartype = EOF_VARTYPE;
+  Token(tokenType h) { type = (int)h; }
+  Token(tokenType _type, int __vartype, int _line) {
+    type = (int)_type;
+    _vartype = __vartype;
+    line = _line;
+  }
+  Token(tokenType _type, int __vartype) {
+    type = (int)_type;
+    _vartype = __vartype;
+  }
+  tokenType getType() { return (tokenType)type; }
+  void setType(tokenType _type) { type = (int)_type; }
+  void clean() {
+    line = 0;
+    type = 0;
+    _vartype = EOF_VARTYPE;
 
-        textref = EOF_TEXTARRAY;
-    }
-    void addText(string t)
-    {
-        textref = all_text.addText(t);
-    }
-    char *getText()
-    {
-        return all_text.getText(textref);
-    }
-    varType *getVarType()
-    {
-        if (_vartype == EOF_VARTYPE)
+    textref = EOF_TEXTARRAY;
+  }
+  void addText(string t) { textref = all_text.addText(t); }
+  char *getText() { return all_text.getText(textref); }
+  varType *getVarType() {
+    if (_vartype == EOF_VARTYPE)
 
-            return NULL;
+      return NULL;
 
-        return &_varTypes[_vartype];
-    }
-    uint16_t line = 0;
-    uint8_t type = (int)TokenUnknown;
-    uint8_t _vartype = EOF_VARTYPE;
-    uint8_t pos = 0;
-    uint16_t textref = EOF_TEXTARRAY;
+    return &_varTypes[_vartype];
+  }
+  uint16_t line = 0;
+  uint8_t type = (int)TokenUnknown;
+  uint8_t _vartype = EOF_VARTYPE;
+  uint8_t pos = 0;
+  uint16_t textref = EOF_TEXTARRAY;
 };
 
 #ifdef __FULL_TOKEN
@@ -910,318 +794,257 @@ public:
 #endif
 int tokenizer(Script *script, bool update, bool increae_line,
               int nbMaxTokenToRead);
-class Tokens
-{
+class Tokens {
 public:
-    void init()
-    {
+  void init() {
 #ifdef __FULL_TOKEN
 
-        position = 0;
+    position = 0;
 #endif
-    }
-    Tokens()
-    {
-        // _tokens = &_list_of_tokens;
-        clear();
-        init();
-    }
+  }
+  Tokens() {
+    // _tokens = &_list_of_tokens;
+    clear();
+    init();
+  }
 
-    void clear()
-    {
-        _tokens.clear();
+  void clear() {
+    _tokens.clear();
 
-        _tokens.shrink_to_fit();
+    _tokens.shrink_to_fit();
 
 #ifdef __FULL_TOKEN
-        position = 0;
+    position = 0;
 #endif
-    }
-    int size()
-    {
-        return _tokens.size();
-    }
-    void tokenize(Script *script, bool update, bool increae_line, int nbToken)
-    {
-        _script = script;
-        clear();
-        tokenizer(script, true, increae_line, nbToken);
-        // list_of_token.push_back(token());
-        // Serial.printf("token read %d\n", tokenizer(script, true, increae_line, nbToken));
-    }
-    void push(Token t)
-    {
-        _tokens.push_back(t);
-    }
-    void pop_back()
-    {
-        if (_tokens.size() > 0)
-        {
-            //	Token t = _tokens.back ();
+  }
+  int size() { return _tokens.size(); }
+  void tokenize(Script *script, bool update, bool increae_line, int nbToken) {
+    _script = script;
+    clear();
+    tokenizer(script, true, increae_line, nbToken);
+    // list_of_token.push_back(token());
+    // Serial.printf("token read %d\n", tokenizer(script, true, increae_line,
+    // nbToken));
+  }
+  void push(Token t) { _tokens.push_back(t); }
+  void pop_back() {
+    if (_tokens.size() > 0) {
+      //	Token t = _tokens.back ();
 
-            _tokens.pop_back();
+      _tokens.pop_back();
 
-            //	return t;
-        }
-        //	else
-        //	  return end_token;
+      //	return t;
     }
-    Token *getTokenAtPos(int pos)
-    {
-        if (pos >= 0 and pos < _tokens.size())
-        {
-            // printf("%s at %d %d\n",_tokens[pos].line,_tokens[pos].pos);
-            return &(_tokens[pos]);
-        }
-        else
-            return &end_token;
-    }
-    Token *current()
-    {
+    //	else
+    //	  return end_token;
+  }
+  Token *getTokenAtPos(int pos) {
+    if (pos >= 0 and pos < _tokens.size()) {
+      // printf("%s at %d %d\n",_tokens[pos].line,_tokens[pos].pos);
+      return &(_tokens[pos]);
+    } else
+      return &end_token;
+  }
+  Token *current() {
 #ifdef __FULL_TOKEN
-        return getTokenAtPos(position);
+    return getTokenAtPos(position);
 #else
-        return getTokenAtPos(__DEPTH);
+    return getTokenAtPos(__DEPTH);
 #endif
-    }
-    Token *next()
-    {
+  }
+  Token *next() {
 #ifdef __FULL_TOKEN
 
-        // position++;
-        tokenizer(_script, false, true, 1);
-        position++;
+    // position++;
+    tokenizer(_script, false, true, 1);
+    position++;
 
-        return getTokenAtPos(position);
+    return getTokenAtPos(position);
 #else
-        _tokens.erase(_tokens.begin());
-        _tokens.shrink_to_fit();
+    _tokens.erase(_tokens.begin());
+    _tokens.shrink_to_fit();
 
-        tokenizer(_script, false, true, 1);
-        return getTokenAtPos(__DEPTH);
+    tokenizer(_script, false, true, 1);
+    return getTokenAtPos(__DEPTH);
 #endif
-    }
-    Token *prev()
-    {
+  }
+  Token *prev() {
 #ifdef __FULL_TOKEN
-        position--;
-        return getTokenAtPos(position);
+    position--;
+    return getTokenAtPos(position);
 #else
-        _tokens.insert(_tokens.begin(), Token());
-        return getTokenAtPos(__DEPTH);
+    _tokens.insert(_tokens.begin(), Token());
+    return getTokenAtPos(__DEPTH);
 #endif
-    }
-    Token *peek(int index)
-    {
+  }
+  Token *peek(int index) {
 
 #ifdef __FULL_TOKEN
-        if (index + position < _tokens.size() && index + position >= 0)
-        {
-            return getTokenAtPos(index + position);
-        }
-        else
-        {
-            tokenizer(_script, false, true,
-                      -_tokens.size() + index + position + 1);
+    if (index + position < _tokens.size() && index + position >= 0) {
+      return getTokenAtPos(index + position);
+    } else {
+      tokenizer(_script, false, true, -_tokens.size() + index + position + 1);
 
-            return getTokenAtPos(index + position);
-        }
+      return getTokenAtPos(index + position);
+    }
 #else
-        if (index + __DEPTH < _tokens.size() && index + __DEPTH >= 0)
-        {
-            return getTokenAtPos(index + __DEPTH);
-        }
-        else
-        {
-            tokenizer(_script, false, true,
-                      -_tokens.size() + index + __DEPTH + 1);
+    if (index + __DEPTH < _tokens.size() && index + __DEPTH >= 0) {
+      return getTokenAtPos(index + __DEPTH);
+    } else {
+      tokenizer(_script, false, true, -_tokens.size() + index + __DEPTH + 1);
 
-            return getTokenAtPos(index + __DEPTH);
-        }
+      return getTokenAtPos(index + __DEPTH);
+    }
 #endif
-    }
-    Token back()
-    {
-        if (_tokens.size() > 0)
-            return _tokens.back();
-        else
-            return Token();
-    }
+  }
+  Token back() {
+    if (_tokens.size() > 0)
+      return _tokens.back();
+    else
+      return Token();
+  }
 
-    bool Match(tokenType tt)
-    {
-        Token *g = current();
-        if (g->getType() == tt)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+  bool Match(tokenType tt) {
+    Token *g = current();
+    if (g->getType() == tt) {
+      return true;
+    } else {
+      return false;
     }
+  }
 
-    bool Match(tokenType tt, int index)
-    {
-        Token *g = peek(index);
-        if (g->getType() == tt)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+  bool Match(tokenType tt, int index) {
+    Token *g = peek(index);
+    if (g->getType() == tt) {
+      return true;
+    } else {
+      return false;
     }
+  }
 
 private:
-    vector<Token> _tokens;
-    Token end_token = Token(TokenEndOfFile);
-    Script *_script;
+  vector<Token> _tokens;
+  Token end_token = Token(TokenEndOfFile);
+  Script *_script;
 #ifdef __FULL_TOKEN
-    int position;
+  int position;
 #endif
 };
 
 Tokens _tks = Tokens();
-void displaytoken(token t)
-{
-    // printf("%s\t%d\t%f\t%s%d %d\t%s\n", tokenNames[t.type].c_str(), t.int_value, t.float_value, t.text.c_str(), t.line, //t.pos, keywordTypeNames[t._keyword].c_str());
+void displaytoken(token t) {
+  // printf("%s\t%d\t%f\t%s%d %d\t%s\n", tokenNames[t.type].c_str(),
+  // t.int_value, t.float_value, t.text.c_str(), t.line, //t.pos,
+  // keywordTypeNames[t._keyword].c_str());
 }
 
-Token transNumber(string str)
-{
-    // t;
-    // t.float_value=0;
-    // t.int_value=0;
-    if (_tks.size() > 1)
-    {
-        if (_tks.back().type == TokenSubstraction)
-        {
-            tokenType subtype = (tokenType)_tks.getTokenAtPos(_tks.size() - 2)->type;
-            if (subtype == TokenComma || subtype == TokenEqual || subtype == TokenDoubleEqual || subtype == TokenLessOrEqualThan || subtype == TokenDoubleEqual || subtype == TokenMoreThan || subtype == TokenMoreOrEqualThan || subtype == TokenNotEqual || subtype == TokenStarEqual || subtype == TokenPlusEqual || subtype == TokenOpenParenthesis)
-            {
-                str = "-" + str;
-                _tks.pop_back();
-            }
-        }
+Token transNumber(string str) {
+  // t;
+  // t.float_value=0;
+  // t.int_value=0;
+  if (_tks.size() > 1) {
+    if (_tks.back().type == TokenSubstraction) {
+      tokenType subtype = (tokenType)_tks.getTokenAtPos(_tks.size() - 2)->type;
+      if (subtype == TokenComma || subtype == TokenEqual ||
+          subtype == TokenDoubleEqual || subtype == TokenLessOrEqualThan ||
+          subtype == TokenDoubleEqual || subtype == TokenMoreThan ||
+          subtype == TokenMoreOrEqualThan || subtype == TokenNotEqual ||
+          subtype == TokenStarEqual || subtype == TokenPlusEqual ||
+          subtype == TokenOpenParenthesis) {
+        str = "-" + str;
+        _tks.pop_back();
+      }
     }
-    if (str.find(".") != string::npos)
-    {
+  }
+  if (str.find(".") != string::npos) {
 
-        Token t = Token(TokenNumber, (int)__float__);
-        t.addText(str);
-        return t;
-    }
-    else
-    {
+    Token t = Token(TokenNumber, (int)__float__);
+    t.addText(str);
+    return t;
+  } else {
 
-        Token t = Token(TokenNumber, (int)__int__);
-        t.addText(str);
-        return t;
-    }
+    Token t = Token(TokenNumber, (int)__int__);
+    t.addText(str);
+    return t;
+  }
 }
 
-int isKeyword(string str)
-{
-    for (int i = 0; i < nb_keywords; i++)
-    {
-        if (keyword_array[i].compare(str) == 0)
-        {
-            return i;
-        }
+int isKeyword(string str) {
+  for (int i = 0; i < nb_keywords; i++) {
+    if (keyword_array[i].compare(str) == 0) {
+      return i;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
-int isUserDefined(string str)
-{
-    for (int i = 0; i < userDefinedVarTypeNames.size(); i++)
-    {
-        if (userDefinedVarTypeNames[i].compare(str) == 0)
-        {
-            return i;
-        }
+int isUserDefined(string str) {
+  for (int i = 0; i < userDefinedVarTypeNames.size(); i++) {
+    if (userDefinedVarTypeNames[i].compare(str) == 0) {
+      return i;
     }
+  }
 
-    return -1;
+  return -1;
 }
 
-bool isIna_zA_Z_(unsigned char c)
-{
-    if (c >= 97 && c <= 122)
-    {
-        return true;
-    }
-    if (c >= 65 && c <= 90)
-    {
-        return true;
-    }
-    if (c == '_')
-    {
-        return true;
-    }
-    return false;
+bool isIna_zA_Z_(unsigned char c) {
+  if (c >= 97 && c <= 122) {
+    return true;
+  }
+  if (c >= 65 && c <= 90) {
+    return true;
+  }
+  if (c == '_') {
+    return true;
+  }
+  return false;
 }
 
-bool isIna_zA_Z_0_9(unsigned char c)
-{
-    if (c >= 97 && c <= 122)
-    {
-        return true;
-    }
-    if (c >= 65 && c <= 90)
-    {
-        return true;
-    }
-    if (c == '_')
-    {
-        return true;
-    }
-    if (c >= 48 && c <= 57)
-    {
-        return true;
-    }
-    return false;
+bool isIna_zA_Z_0_9(unsigned char c) {
+  if (c >= 97 && c <= 122) {
+    return true;
+  }
+  if (c >= 65 && c <= 90) {
+    return true;
+  }
+  if (c == '_') {
+    return true;
+  }
+  if (c >= 48 && c <= 57) {
+    return true;
+  }
+  return false;
 }
 
-bool isIn0_9(unsigned char c)
-{
-    if (c >= 48 && c <= 57)
-    {
-        return true;
-    }
-    return false;
+bool isIn0_9(unsigned char c) {
+  if (c >= 48 && c <= 57) {
+    return true;
+  }
+  return false;
 }
 
-bool isIn0_9_x_b(unsigned char c)
-{
-    if (c >= 48 && c <= 57)
-    {
-        return true;
-    }
-    if (c == 'b')
-    {
-        return true;
-    }
-    if (c >= 'A' && c <= 'F')
-    {
-        return true;
-    }
-    if (c >= 'a' && c <= 'f')
-    {
-        return true;
-    }
-    if (c == 'x')
-    {
-        return true;
-    }
-    if (c == '.')
-    {
-        return true;
-    }
-    return false;
+bool isIn0_9_x_b(unsigned char c) {
+  if (c >= 48 && c <= 57) {
+    return true;
+  }
+  if (c == 'b') {
+    return true;
+  }
+  if (c >= 'A' && c <= 'F') {
+    return true;
+  }
+  if (c >= 'a' && c <= 'f') {
+    return true;
+  }
+  if (c == 'x') {
+    return true;
+  }
+  if (c == '.') {
+    return true;
+  }
+  return false;
 }
 
 bool _for_display = false;
@@ -1233,1055 +1056,940 @@ list<token>::iterator _index_token;
 string v;
 Token t;
 int tokenizer(Script *script, bool update, bool increae_line,
-              int nbMaxTokenToRead)
-{
+              int nbMaxTokenToRead) {
 
-    // list<token> list_of_token;
-    // int line = 1;
+  // list<token> list_of_token;
+  // int line = 1;
 
-    // int pos = 0;
-    char c;
-    char c2;
-    _define newdef;
+  // int pos = 0;
+  char c;
+  char c2;
+  _define newdef;
+  v.clear();
+  if (update) {
+    userDefinedVarTypeNames.clear();
+    userDefinedVarTypeNames.shrink_to_fit();
+    all_text.clear();
+    _tks.clear();
+    for (int i = 0; i < __DEPTH; i++) {
+      _tks.push(Token());
+    }
+    _token_line = 1;
+    pos = 0;
+    deleteDefine();
+
+    __isBlockComment = false;
+    // _for_display= true;
+  } else {
+    script->previousChar();
+  }
+  int nbReadToken = 0;
+  while (script->nextChar() != EOF_TEXT and nbReadToken < nbMaxTokenToRead) {
+    // printf(" nb read :%c:\n",script->currentChar());
+    t.clean();
     v.clear();
-    if (update)
-    {
-        userDefinedVarTypeNames.clear();
-        userDefinedVarTypeNames.shrink_to_fit();
-        all_text.clear();
-        _tks.clear();
-        for (int i = 0; i < __DEPTH; i++)
-        {
-            _tks.push(Token());
-        }
-        _token_line = 1;
-        pos = 0;
-        deleteDefine();
+    pos++;
 
-        __isBlockComment = false;
-        // _for_display= true;
-    }
-    else
-    {
+    c = script->currentChar();
+    // printf("line : %d pos:%d char:%c token size:%d
+    // %d\n",line,pos,c,list_of_token.size(),heap_caps_get_free_size(MALLOC_CAP_8BIT));
+    if (c == '=') {
+      c2 = script->nextChar();
+      if (c2 == '=') {
+        t = Token(TokenDoubleEqual, EOF_VARTYPE);
+        // t._vartype = NULL;
+        // t.type = TokenDoubleEqual;
+        if (_for_display)
+          t.addText("==");
+        t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        // nbReadToken++;
+
+        continue;
+      } else {
         script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        //  t.type = TokenEqual;
+        //  t.line = _token_line;
+        t = Token(TokenEqual, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("=");
+        _tks.push(t);
+        // nbReadToken++;
+        continue;
+      }
     }
-    int nbReadToken = 0;
-    while (script->nextChar() != EOF_TEXT and nbReadToken < nbMaxTokenToRead)
-    {
-        // printf(" nb read :%c:\n",script->currentChar());
-        t.clean();
-        v.clear();
+    if (c == '<') {
+      c2 = script->nextChar();
+      if (c2 == '=') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenLessOrEqualThan;
+
+        t = Token(TokenLessOrEqualThan, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("<=");
+        // t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        // nbReadToken++;
+        continue;
+      } else if (c2 == '<') {
+        // token t;
+        // t._vartype = NULL;
+        //  t.type = TokenShiftLeft;
+        t = Token(TokenShiftLeft, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("<<");
+        // t.line = _token_line;
+        //  t.pos = pos;
+        //  _tks.push(t);
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenLessThan;
+        // t.line = _token_line;//
+        // TokenLessThan
+        t = Token(TokenLessThan, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("<");
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '>') {
+      c2 = script->nextChar();
+      if (c2 == '=') {
+        //  token t;
+        //  t._vartype = NULL;
+        // t.type = TokenMoreOrEqualThan;
+        t = Token(TokenMoreOrEqualThan, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText(">=");
+        // t.line = _token_line;
+        t.pos = pos;
+        //_tks.push(t);
+        _tks.push(t);
+        // nbReadToken++;
+        continue;
+      } else if (c2 == '>') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenShiftRight;
+        t = Token(TokenShiftRight, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText(">>");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenMoreThan;
+        // t.line = _token_line;
+        t = Token(TokenMoreThan, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText(">");
+        // _tks.push(t);
+        _tks.push(t);
+        // nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '!') {
+      c2 = script->nextChar();
+      if (c2 == '=') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenNotEqual;
+        t = Token(TokenNotEqual, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("!=");
+        // t.line = _token_line;
+        t.pos = pos;
+        //_tks.push(t);
+        _tks.push(t);
+        /// nbReadToken++;
+        continue;
+      } else {
+        script->previousChar();
+        //  token t;
+        //  t._vartype = NULL;
+        // t.type = TokenNot;
+        // t.line = _token_line;
+        t = Token(TokenNot, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("!");
+        // _tks.push(t);
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '+') {
+      c2 = script->nextChar();
+      if (c2 == '+') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenPlusPlus;
+        t = Token(TokenPlusPlus, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("++");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      } else if (c2 == '=') {
+        t = Token(TokenPlusEqual, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("+=");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        // t.type = TokenAddition;
+        t = Token(TokenAddition, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("+");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+
+    if (isIna_zA_Z_(c)) {
+
+      int newpos = pos;
+      while (isIna_zA_Z_0_9(c)) {
+        v += c;
+        newpos++;
+        c = script->nextChar();
+      }
+      script->previousChar(); // on revient un caractere en arriere
+      // token t;
+      // Token t;
+      //  t._vartype=NULL;
+      t.line = _token_line;
+      t.pos = pos;
+      if (isKeyword(v) > -1) {
+        // printf("keyword;%s\n",v.c_str());
+        // t.type = TokenKeyword;
+        t.type = (int)__keywordTypes[isKeyword(v)];
+        if (isKeyword(v) < nb_typeVariables)
+          t._vartype = isKeyword(v);
+        if (t.getType() == TokenKeywordExternalVar) {
+          t.type = (int)TokenExternal;
+        }
+        if ((t.getType() == TokenKeywordImport or
+             t.getType() == TokenKeywordDefine) &&
+            !_for_display) {
+
+          nbReadToken--;
+        }
+      } else if (isUserDefined(v) > -1) {
+        t.type = (int)TokenUserDefinedVariable;
+        t._vartype = (int)__userDefined__;
+      } else {
+        t.type = (int)TokenIdentifier;
+
+        if (_tks.size() >= __DEPTH) {
+
+          Token prev = _tks.back();
+          if (prev.getType() == TokenKeywordImport && !_for_display) {
+
+            // script->insert(import);
+
+            _sav_token_line = _token_line;
+            nbReadToken--;
+            if (findLibFunction(v) > -1) {
+
+              _tks.pop_back();
+
+              all_text.pop();
+
+              // list_of_token.pop_back();
+              //  add_on.push_back(findLibFunction(v));
+              script->insert((char *)((*_stdlib[findLibFunction(v)]).c_str()));
+
+              // script->previousChar ();
+
+              continue;
+            }
+          } else if (prev.getType() == TokenDiese && !_for_display) {
+            nbReadToken--;
+            if (findLibFunction(v) > -1) {
+
+              _tks.pop_back();
+              // printf("token %d\n",_tks.back().type);
+              all_text.pop();
+
+              // list_of_token.pop_back();
+              //  add_on.push_back(findLibFunction(v));
+              script->insertAtEnd(
+                  (char *)((*_stdlib[findLibFunction(v)]).c_str()));
+              // printf("ll%d
+              // %s\n",findLibFunction(v),(*_stdlib[findLibFunction(v)]).c_str());
+              script->nextChar();
+              // script->previousChar ();
+              continue;
+            }
+          } else if (prev.getType() == TokenKeywordDefine && !_for_display) {
+            _tks.pop_back();
+            all_text.pop();
+            // nbReadToken--;
+
+            newdef.name = v;
+            newdef.content = "";
+
+            c2 = script->nextChar();
+            // c2 = script->nextChar();
+            while (c2 != '\n' and c2 != EOF_TEXT) {
+              newdef.content = newdef.content + c2;
+              c2 = script->nextChar();
+            }
+            define_list.push_back(newdef);
+            if (increae_line)
+              _token_line++;
+            // script->previousChar();
+            continue;
+          } else if (prev.getType() == TokenKeywordStruct && !_for_display) {
+            userDefinedVarTypeNames.push_back(v);
+            t.type = (int)TokenUserDefinedName;
+            // continue;
+          }
+        }
+        if (!_for_display) // on ne remplace pas lorsque l'on display
+        {
+          if (getDefine(v) != NULL) {
+
+            script->insert((char *)(getDefine(v)));
+            script->nextChar();
+            // nbReadToken--;
+            continue;
+          }
+        }
+      }
+      pos = newpos - 1;
+
+      t.addText(v);
+      //_tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+
+    if (isIn0_9(c)) {
+      // //printf("on a %c\n",c);
+      v = "";
+      int newpos = pos;
+      while (isIn0_9_x_b(c)) {
+        v += c;
+        c = script->nextChar();
+        newpos++;
+      }
+      script->previousChar(); // on revient un caractere en arriere
+      t = transNumber(v);
+      //  t._vartype=NULL;
+      t.line = _token_line;
+      t.pos = pos;
+      //_tks.push(t);
+
+      _tks.push(t);
+      nbReadToken++;
+      pos = newpos - 1;
+      continue;
+    }
+    if (c == ';') {
+      // token t;
+      // t.type = TokenSemicolon;
+      // t._vartype = NULL;
+      t = Token(TokenSemicolon, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText(";");
+      // t.line = _token_line;
+      t.pos = pos;
+      // _tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == '\t') {
+      // token t;
+      // t.type = TokenSpace;
+      // t._vartype = NULL;
+      t = Token(TokenSpace, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("\t");
+      // t.line = _token_line;
+      //  t.pos = pos;
+      if (_for_display) {
+        //_tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+      }
+      continue;
+    }
+    if (c == '&') {
+      c2 = script->nextChar();
+      if (c2 == '&') {
+        t = Token(TokenDoubleUppersand, EOF_VARTYPE);
+        // t._vartype = NULL;
+        // t.type = TokenDoubleEqual;
+        if (_for_display)
+          t.addText("&&");
+        t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        // nbReadToken++;
+
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        //  t.type = TokenEqual;
+        //  t.line = _token_line;
+        t = Token(TokenUppersand, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("&");
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '#') {
+      // token t;
+      // t.type = TokenDiese;
+      // t._vartype = NULL;
+      t = Token(TokenDiese, EOF_VARTYPE, _token_line);
+      if (_for_display) {
+        t.addText("#");
+        // _tks.push(t);
+      }
+      // t.line = _token_line;
+      //  t.pos = pos;
+      _tks.push(t);
+      // nbReadToken++;
+      continue;
+    }
+    if (c == '(') {
+      // token t;
+      // t.type = TokenOpenParenthesis;
+      // t._vartype = NULL;
+      t = Token(TokenOpenParenthesis, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("(");
+      // t.line = _token_line;
+      t.pos = pos;
+      //_tks.push(t);
+      _tks.push(t);
+      // nbReadToken++;
+      continue;
+    }
+    if (c == '%') {
+      // token t;
+      //  t.type = TokenModulo;
+      // t._vartype = NULL;
+      t = Token(TokenModulo, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("%");
+      // t.line = _token_line;
+      t.pos = pos;
+      //_tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == ')') {
+      //  token t;
+      // t.type = TokenCloseParenthesis;
+      // t._vartype = NULL;
+      t = Token(TokenCloseParenthesis, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText(")");
+      // t.line = _token_line;
+      t.pos = pos;
+      //_tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == '{') {
+      // token t;
+      // t.type = TokenOpenCurlyBracket;
+      // t._vartype = NULL;
+      t = Token(TokenOpenCurlyBracket, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("{");
+      // t.line = _token_line;
+      //  t.pos = pos;
+      //_tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == '}') {
+      // token t;
+      // t.type = TokenCloseCurlyBracket;
+      // t._vartype = NULL;
+      t = Token(TokenCloseCurlyBracket, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("}");
+      // t.line = _token_line;
+      t.pos = pos;
+      // _tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == '[') {
+      //  token t;
+      // t.type = TokenOpenBracket;
+      // t._vartype = NULL;
+      t = Token(TokenOpenBracket, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("[");
+      // t.line = _token_line;
+      t.pos = pos;
+      //_tks.push(t);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
+    }
+    if (c == ']') {
+      // token t;
+      // t.type = TokenCloseBracket;
+      // t._vartype = NULL;
+      c2 = script->nextChar();
+      if (c2 == '[') {
+        t = Token(TokenComma, EOF_VARTYPE);
+        // t._vartype = NULL;
+        // t.type = TokenDoubleEqual;
+        if (_for_display)
+          t.addText("][");
+        t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        nbReadToken++;
+
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        //  t.type = TokenEqual;
+        //  t.line = _token_line;
+        t = Token(TokenCloseBracket, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("]");
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '/') {
+      char c2 = script->nextChar();
+      if (c2 == '/') {
+        // Token t;
+        t._vartype = EOF_VARTYPE;
+        t.type = (int)TokenLineComment;
+        string str = "//";
+
+        c2 = script->nextChar();
+        while (c2 != '\n' and c2 != EOF_TEXT) {
+          str = str + c2; // string_format("%s%c", t.getText(), c2);
+          c2 = script->nextChar();
+        }
+        str = str + '\0';
+        // c2 = script->previousChar();
+        if (_for_display) {
+          c2 = script->previousChar();
+          t.addText(str);
+        }
+        t.line = _token_line;
+        t.pos = pos;
+        if (increae_line)
+          _token_line++;
+        if (_for_display) {
+          // script->previousChar();
+          _tks.push(t);
+          nbReadToken++;
+        }
+        continue;
+      } else if (c2 == '=') {
+        t = Token(TokenSlashEqual, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("/=");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      } else if (c2 == '*') {
+        // Token t;
+        t._vartype = EOF_VARTYPE;
+        t.type = (int)TokenLineComment;
+
+        string str = "/*";
+        c = script->nextChar();
+        c2 = script->nextChar();
+        while ((c != '*' or c2 != '/') and c2 != EOF_TEXT and
+               c != EOF_TEXT) // stop when (c=* and c2=/) or c=0 or c2=0
+        {
+          if (_for_display)
+            // str = string_format("%s%c", t.getText(), c);
+            str = str + c2;
+          c = c2;
+          c2 = script->nextChar();
+        }
+        if (_for_display)
+          t.addText(str);
+        t.line = _token_line;
+        t.pos = pos;
+        if (_for_display) {
+          _tks.push(t);
+          nbReadToken++;
+        }
+        continue;
+      } else {
+        script->previousChar();
+        // Token t;
+        t.type = (int)TokenSlash;
+        t._vartype = EOF_VARTYPE;
+        if (_for_display)
+          t.addText("/");
+        t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == '-') {
+      c2 = script->nextChar();
+      if (c2 == '-') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenPlusPlus;
+        t = Token(TokenMinusMinus, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("--");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      }
+      if (c2 == '=') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenPlusPlus;
+        t = Token(TokenMinusEqual, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("-=");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        // t.type = TokenAddition;
+        t = Token(TokenSubstraction, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("-");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        _tks.push(t);
+        // nbReadToken++;
+        continue;
+      }
+      // Token t;
+    }
+    if (c == ' ') {
+      // Token t;
+      t.line = _token_line;
+      t.pos = pos;
+      string str = "";
+
+      while (c == ' ') {
+        c = script->nextChar();
         pos++;
-
-        c = script->currentChar();
-        // printf("line : %d pos:%d char:%c token size:%d %d\n",line,pos,c,list_of_token.size(),heap_caps_get_free_size(MALLOC_CAP_8BIT));
-        if (c == '=')
-        {
-            c2 = script->nextChar();
-            if (c2 == '=')
-            {
-                t = Token(TokenDoubleEqual, EOF_VARTYPE);
-                // t._vartype = NULL;
-                // t.type = TokenDoubleEqual;
-                if (_for_display)
-                    t.addText("==");
-                t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                // nbReadToken++;
-
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                //  t.type = TokenEqual;
-                //  t.line = _token_line;
-                t = Token(TokenEqual, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("=");
-                _tks.push(t);
-                // nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '<')
-        {
-            c2 = script->nextChar();
-            if (c2 == '=')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenLessOrEqualThan;
-
-                t = Token(TokenLessOrEqualThan, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("<=");
-                // t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                // nbReadToken++;
-                continue;
-            }
-            else if (c2 == '<')
-            {
-                // token t;
-                // t._vartype = NULL;
-                //  t.type = TokenShiftLeft;
-                t = Token(TokenShiftLeft, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("<<");
-                // t.line = _token_line;
-                //  t.pos = pos;
-                //  _tks.push(t);
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenLessThan;
-                // t.line = _token_line;//
-                // TokenLessThan
-                t = Token(TokenLessThan, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("<");
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '>')
-        {
-            c2 = script->nextChar();
-            if (c2 == '=')
-            {
-                //  token t;
-                //  t._vartype = NULL;
-                // t.type = TokenMoreOrEqualThan;
-                t = Token(TokenMoreOrEqualThan, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText(">=");
-                // t.line = _token_line;
-                t.pos = pos;
-                //_tks.push(t);
-                _tks.push(t);
-                // nbReadToken++;
-                continue;
-            }
-            else if (c2 == '>')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenShiftRight;
-                t = Token(TokenShiftRight, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText(">>");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenMoreThan;
-                // t.line = _token_line;
-                t = Token(TokenMoreThan, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText(">");
-                // _tks.push(t);
-                _tks.push(t);
-                // nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '!')
-        {
-            c2 = script->nextChar();
-            if (c2 == '=')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenNotEqual;
-                t = Token(TokenNotEqual, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("!=");
-                // t.line = _token_line;
-                t.pos = pos;
-                //_tks.push(t);
-                _tks.push(t);
-                /// nbReadToken++;
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                //  token t;
-                //  t._vartype = NULL;
-                // t.type = TokenNot;
-                // t.line = _token_line;
-                t = Token(TokenNot, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("!");
-                // _tks.push(t);
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '+')
-        {
-            c2 = script->nextChar();
-            if (c2 == '+')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenPlusPlus;
-                t = Token(TokenPlusPlus, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("++");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            else if (c2 == '=')
-            {
-                t = Token(TokenPlusEqual, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("+=");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                // t.type = TokenAddition;
-                t = Token(TokenAddition, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("+");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-
-        if (isIna_zA_Z_(c))
-        {
-
-            int newpos = pos;
-            while (isIna_zA_Z_0_9(c))
-            {
-                v += c;
-                newpos++;
-                c = script->nextChar();
-            }
-            script->previousChar(); // on revient un caractere en arriere
-            // token t;
-            // Token t;
-            //  t._vartype=NULL;
-            t.line = _token_line;
-            t.pos = pos;
-            if (isKeyword(v) > -1)
-            {
-                // printf("keyword;%s\n",v.c_str());
-                // t.type = TokenKeyword;
-                t.type = (int)__keywordTypes[isKeyword(v)];
-                if (isKeyword(v) < nb_typeVariables)
-                    t._vartype = isKeyword(v);
-                if (t.getType() == TokenKeywordExternalVar)
-                {
-                    t.type = (int)TokenExternal;
-                }
-                if ((t.getType() == TokenKeywordImport or t.getType() == TokenKeywordDefine) && !_for_display)
-                {
-
-                    nbReadToken--;
-                }
-            }
-            else if (isUserDefined(v) > -1)
-            {
-                t.type = (int)TokenUserDefinedVariable;
-                t._vartype = (int)__userDefined__;
-            }
-            else
-            {
-                t.type = (int)TokenIdentifier;
-
-                if (_tks.size() >= __DEPTH)
-                {
-
-                    Token prev = _tks.back();
-                    if (prev.getType() == TokenKeywordImport && !_for_display)
-                    {
-
-                        // script->insert(import);
-
-                        _sav_token_line = _token_line;
-                        nbReadToken--;
-                        if (findLibFunction(v) > -1)
-                        {
-
-                            _tks.pop_back();
-
-                            all_text.pop();
-
-                            // list_of_token.pop_back();
-                            //  add_on.push_back(findLibFunction(v));
-                            script->insert((char *)((*_stdlib[findLibFunction(v)]).c_str()));
-
-                            // script->previousChar ();
-
-                            continue;
-                        }
-                    }
-                    else if (prev.getType() == TokenDiese && !_for_display)
-                    {
-                        nbReadToken--;
-                        if (findLibFunction(v) > -1)
-                        {
-
-                            _tks.pop_back();
-                            // printf("token %d\n",_tks.back().type);
-                            all_text.pop();
-
-                            // list_of_token.pop_back();
-                            //  add_on.push_back(findLibFunction(v));
-                            script->insertAtEnd((char *)((*_stdlib[findLibFunction(v)]).c_str()));
-                            // printf("ll%d %s\n",findLibFunction(v),(*_stdlib[findLibFunction(v)]).c_str());
-                            script->nextChar();
-                            // script->previousChar ();
-                            continue;
-                        }
-                    }
-                    else if (prev.getType() == TokenKeywordDefine && !_for_display)
-                    {
-                        _tks.pop_back();
-                        all_text.pop();
-                        // nbReadToken--;
-
-                        newdef.name = v;
-                        newdef.content = "";
-
-                        c2 = script->nextChar();
-                        // c2 = script->nextChar();
-                        while (c2 != '\n' and c2 != EOF_TEXT)
-                        {
-                            newdef.content = newdef.content + c2;
-                            c2 = script->nextChar();
-                        }
-                        define_list.push_back(newdef);
-                        if (increae_line)
-                            _token_line++;
-                        // script->previousChar();
-                        continue;
-                    }
-                    else if (prev.getType() == TokenKeywordStruct && !_for_display)
-                    {
-                        userDefinedVarTypeNames.push_back(v);
-                        t.type = (int)TokenUserDefinedName;
-                        // continue;
-                    }
-                }
-                if (!_for_display) // on ne remplace pas lorsque l'on display
-                {
-                    if (getDefine(v) != NULL)
-                    {
-
-                        script->insert((char *)(getDefine(v)));
-                        script->nextChar();
-                        // nbReadToken--;
-                        continue;
-                    }
-                }
-            }
-            pos = newpos - 1;
-
-            t.addText(v);
-            //_tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-
-        if (isIn0_9(c))
-        {
-            // //printf("on a %c\n",c);
-            v = "";
-            int newpos = pos;
-            while (isIn0_9_x_b(c))
-            {
-                v += c;
-                c = script->nextChar();
-                newpos++;
-            }
-            script->previousChar(); // on revient un caractere en arriere
-            t = transNumber(v);
-            //  t._vartype=NULL;
-            t.line = _token_line;
-            t.pos = pos;
-            //_tks.push(t);
-
-            _tks.push(t);
-            nbReadToken++;
-            pos = newpos - 1;
-            continue;
-        }
-        if (c == ';')
-        {
-            // token t;
-            // t.type = TokenSemicolon;
-            // t._vartype = NULL;
-            t = Token(TokenSemicolon, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText(";");
-            // t.line = _token_line;
-            t.pos = pos;
-            // _tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == '\t')
-        {
-            // token t;
-            // t.type = TokenSpace;
-            // t._vartype = NULL;
-            t = Token(TokenSpace, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("\t");
-            // t.line = _token_line;
-            //  t.pos = pos;
-            if (_for_display)
-            {
-                //_tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-            }
-            continue;
-        }
-        if (c == '&')
-        {
-            c2 = script->nextChar();
-            if (c2 == '&')
-            {
-                t = Token(TokenDoubleUppersand, EOF_VARTYPE);
-                // t._vartype = NULL;
-                // t.type = TokenDoubleEqual;
-                if (_for_display)
-                    t.addText("&&");
-                t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                // nbReadToken++;
-
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                //  t.type = TokenEqual;
-                //  t.line = _token_line;
-                t = Token(TokenUppersand, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("&");
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '#')
-        {
-            // token t;
-            // t.type = TokenDiese;
-            // t._vartype = NULL;
-            t = Token(TokenDiese, EOF_VARTYPE, _token_line);
-            if (_for_display)
-            {
-                t.addText("#");
-                // _tks.push(t);
-            }
-            // t.line = _token_line;
-            //  t.pos = pos;
-            _tks.push(t);
-            // nbReadToken++;
-            continue;
-        }
-        if (c == '(')
-        {
-            // token t;
-            // t.type = TokenOpenParenthesis;
-            // t._vartype = NULL;
-            t = Token(TokenOpenParenthesis, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("(");
-            // t.line = _token_line;
-            t.pos = pos;
-            //_tks.push(t);
-            _tks.push(t);
-            // nbReadToken++;
-            continue;
-        }
-        if (c == '%')
-        {
-            // token t;
-            //  t.type = TokenModulo;
-            // t._vartype = NULL;
-            t = Token(TokenModulo, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("%");
-            // t.line = _token_line;
-            t.pos = pos;
-            //_tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == ')')
-        {
-            //  token t;
-            // t.type = TokenCloseParenthesis;
-            // t._vartype = NULL;
-            t = Token(TokenCloseParenthesis, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText(")");
-            // t.line = _token_line;
-            t.pos = pos;
-            //_tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == '{')
-        {
-            // token t;
-            // t.type = TokenOpenCurlyBracket;
-            // t._vartype = NULL;
-            t = Token(TokenOpenCurlyBracket, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("{");
-            // t.line = _token_line;
-            //  t.pos = pos;
-            //_tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == '}')
-        {
-            // token t;
-            // t.type = TokenCloseCurlyBracket;
-            // t._vartype = NULL;
-            t = Token(TokenCloseCurlyBracket, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("}");
-            // t.line = _token_line;
-            t.pos = pos;
-            // _tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == '[')
-        {
-            //  token t;
-            // t.type = TokenOpenBracket;
-            // t._vartype = NULL;
-            t = Token(TokenOpenBracket, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("[");
-            // t.line = _token_line;
-            t.pos = pos;
-            //_tks.push(t);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == ']')
-        {
-            // token t;
-            // t.type = TokenCloseBracket;
-            // t._vartype = NULL;
-            c2 = script->nextChar();
-            if (c2 == '[')
-            {
-                t = Token(TokenComma, EOF_VARTYPE);
-                // t._vartype = NULL;
-                // t.type = TokenDoubleEqual;
-                if (_for_display)
-                    t.addText("][");
-                t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                nbReadToken++;
-
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                //  t.type = TokenEqual;
-                //  t.line = _token_line;
-                t = Token(TokenCloseBracket, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("]");
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '/')
-        {
-            char c2 = script->nextChar();
-            if (c2 == '/')
-            {
-                // Token t;
-                t._vartype = EOF_VARTYPE;
-                t.type = (int)TokenLineComment;
-                string str = "//";
-
-                c2 = script->nextChar();
-                while (c2 != '\n' and c2 != EOF_TEXT)
-                {
-                    str = str + c2; // string_format("%s%c", t.getText(), c2);
-                    c2 = script->nextChar();
-                }
-                str = str + '\0';
-                // c2 = script->previousChar();
-                if (_for_display)
-                {
-                    c2 = script->previousChar();
-                    t.addText(str);
-                }
-                t.line = _token_line;
-                t.pos = pos;
-                if (increae_line)
-                    _token_line++;
-                if (_for_display)
-                {
-                    // script->previousChar();
-                    _tks.push(t);
-                    nbReadToken++;
-                }
-                continue;
-            }
-            else if (c2 == '=')
-            {
-                t = Token(TokenSlashEqual, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("/=");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            else if (c2 == '*')
-            {
-                // Token t;
-                t._vartype = EOF_VARTYPE;
-                t.type = (int)TokenLineComment;
-
-                string str = "/*";
-                c = script->nextChar();
-                c2 = script->nextChar();
-                while ((c != '*' or c2 != '/') and c2 != EOF_TEXT and c != EOF_TEXT) // stop when (c=* and c2=/) or c=0 or c2=0
-                {
-                    if (_for_display)
-                        // str = string_format("%s%c", t.getText(), c);
-                        str = str + c2;
-                    c = c2;
-                    c2 = script->nextChar();
-                }
-                if (_for_display)
-                    t.addText(str);
-                t.line = _token_line;
-                t.pos = pos;
-                if (_for_display)
-                {
-                    _tks.push(t);
-                    nbReadToken++;
-                }
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // Token t;
-                t.type = (int)TokenSlash;
-                t._vartype = EOF_VARTYPE;
-                if (_for_display)
-                    t.addText("/");
-                t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == '-')
-        {
-            c2 = script->nextChar();
-            if (c2 == '-')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenPlusPlus;
-                t = Token(TokenMinusMinus, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("--");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            if (c2 == '=')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenPlusPlus;
-                t = Token(TokenMinusEqual, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("-=");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                // t.type = TokenAddition;
-                t = Token(TokenSubstraction, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("-");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                _tks.push(t);
-                // nbReadToken++;
-                continue;
-            }
-            // Token t;
-        }
-        if (c == ' ')
-        {
-            // Token t;
-            t.line = _token_line;
-            t.pos = pos;
-            string str = "";
-
-            while (c == ' ')
-            {
-                c = script->nextChar();
-                pos++;
-                str = str + " ";
-            }
-            if (_for_display)
-                t.addText(str);
-            script->previousChar(); // on revient un caractere en arriere
-            pos--;
-            t.type = TokenSpace;
-            // t.addText(" ";
-            if (_for_display)
-            {
-                _tks.push(t);
-                nbReadToken++;
-            }
-            continue;
-        }
-        if (c == '"')
-        {
-            v = "";
-            // Token t;
-            t._vartype = EOF_VARTYPE;
-            t.line = _token_line;
-            t.pos = pos;
+        str = str + " ";
+      }
+      if (_for_display)
+        t.addText(str);
+      script->previousChar(); // on revient un caractere en arriere
+      pos--;
+      t.type = TokenSpace;
+      // t.addText(" ";
+      if (_for_display) {
+        _tks.push(t);
+        nbReadToken++;
+      }
+      continue;
+    }
+    if (c == '"') {
+      v = "";
+      // Token t;
+      t._vartype = EOF_VARTYPE;
+      t.line = _token_line;
+      t.pos = pos;
+      v += c;
+      c = script->nextChar();
+      pos++;
+      while (c != '"' && c != EOF_TEXT) {
+        if (!_for_display) {
+          char c2 = script->nextChar();
+          if (c == '\\' and c2 == 'n') {
+            c = '\x0d';
+            v += c;
+            c = '\x0a';
             v += c;
             c = script->nextChar();
-            pos++;
-            while (c != '"' && c != EOF_TEXT)
-            {
-                if (!_for_display)
-                {
-                    char c2 = script->nextChar();
-                    if (c == '\\' and c2 == 'n')
-                    {
-                        c = '\x0d';
-                        v += c;
-                        c = '\x0a';
-                        v += c;
-                        c = script->nextChar();
-                    }
-                    else
-                    {
-                        v += c;
-                        c = c2;
-                    }
-
-                    pos++;
-                }
-                else
-                {
-                    v += c;
-                    c = script->nextChar();
-                    pos++;
-                }
-            }
-            // script->previousChar(); //on revient un caractere en arriere
-            // pos--;
+          } else {
             v += c;
-            t.type = (int)TokenString;
-            t.addText(v);
-            _tks.push(t);
-            nbReadToken++;
-            continue;
-        }
-        if (c == '\n')
-        {
-            // Token t;
-            t.type = (int)TokenNewline;
-            if (_for_display)
-                t.addText("\r\n");
-            t.line = _token_line;
-            t.pos = pos;
-            if (increae_line)
-                _token_line++;
-            pos = 0;
-            if (_for_display)
-                _tks.push(t);
-                #ifdef PARSER_DEBUG
-            if (!_for_display)
-            {
+            c = c2;
+          }
 
-                printf("line;%d\n\r", _token_line);
-            }
-            #endif
-            continue;
+          pos++;
+        } else {
+          v += c;
+          c = script->nextChar();
+          pos++;
         }
-        if (c == '?')
-        {
-            // Token t;
-            t = Token(TokenQuestionMark, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText("?");
-            t.line = _token_line;
-            t.pos = pos;
-            //_token_line++;
-            //  pos = 0;
-            // if (_for_display)
-            _tks.push(t);
-            continue;
-        }
-        if (c == '.')
-        {
-            // Token t;
-            t.type = (int)TokenMember;
-            if (_for_display)
-                t.addText(".");
-            t.line = _token_line;
-            t.pos = pos;
-            //_token_line++;
-            //  pos = 0;
-            // if (_for_display)
-            _tks.push(t);
-            // nbReadToken++;
-            continue;
-        }
-        if (c == '^')
-        {
-            // Token t;
-            t.type = (int)TokenPower;
-            if (_for_display)
-                t.addText("^");
-            t.line = _token_line;
-            t.pos = pos;
-            //_token_line++;
-            //  pos = 0;
-            // if (_for_display)
-            _tks.push(t);
-            // nbReadToken++;
-            continue;
-        }
-        if (c == '@')
-        {
-            // Token t;
-            t.type = (int)TokenUnknown;
-            if (_for_display)
-                t.addText("@");
-            _token_line = _sav_token_line;
-            if (_for_display)
-                _tks.push(t);
-            continue;
-        }
-        if (c == '\'')
-        {
-            // Token t;
-            t.type = (int)TokenUnknown;
-            if (_for_display)
-                t.addText("\'");
-            t.line = _token_line;
-            t.pos = pos;
-            //  _token_line++;
-            //  pos = 0;
-            if (_for_display)
-                _tks.push(t);
-            continue;
-        }
-        if (c == ':')
-        {
-            // Token t;
-            t = Token(TokenColon, EOF_VARTYPE, _token_line);
-            if (_for_display)
-                t.addText(":");
-            t.line = _token_line;
-            t.pos = pos;
-            //_token_line++;
-            //  pos = 0;
-            // if (_for_display)
-            _tks.push(t);
-            continue;
-        }
-        if (c == '*')
-        {
-            c2 = script->nextChar();
-            if (c2 == '=')
-            {
-                // token t;
-                // t._vartype = NULL;
-                // t.type = TokenPlusPlus;
-                t = Token(TokenStarEqual, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("*=");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                // nbReadToken++;
-                _tks.push(t);
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                // t.type = TokenAddition;
-                t = Token(TokenStar, EOF_VARTYPE, _token_line);
-                if (_for_display)
-                    t.addText("*");
-                // t.line = _token_line;
-                t.pos = pos;
-                // _tks.push(t);
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-            // Token t;
-        }
-        if (c == '|')
-        {
-            c2 = script->nextChar();
-            if (c2 == '|')
-            {
-                t = Token(TokenDoubleOr, EOF_VARTYPE);
-                // t._vartype = NULL;
-                // t.type = TokenDoubleEqual;
-                if (_for_display)
-                    t.addText("||");
-                t.line = _token_line;
-                t.pos = pos;
-                _tks.push(t);
-                nbReadToken++;
-
-                continue;
-            }
-            else
-            {
-                script->previousChar();
-                // token t;
-                //  t._vartype = NULL;
-                //  t.type = TokenEqual;
-                //  t.line = _token_line;
-                t = Token(TokenKeywordOr, EOF_VARTYPE, _token_line);
-                t.pos = pos;
-                if (_for_display)
-                    t.addText("|");
-                _tks.push(t);
-                nbReadToken++;
-                continue;
-            }
-        }
-        if (c == ',')
-        {
-            // Token t;
-            t._vartype = EOF_VARTYPE;
-            t.type = (int)TokenComma;
-            if (_for_display)
-                t.addText(",");
-            t.line = _token_line;
-            t.pos = pos;
-            _tks.push(t);
-            // nbReadToken++;
-            continue;
-        }
-        if (c == 27)
-        {
-            c2 = script->nextChar();
-            continue;
-        }
-        //if (!_for_display)
-          //  printf("Error invalid character |%d| line :%d pos: %d\n", c, _token_line, pos);
+      }
+      // script->previousChar(); //on revient un caractere en arriere
+      // pos--;
+      v += c;
+      t.type = (int)TokenString;
+      t.addText(v);
+      _tks.push(t);
+      nbReadToken++;
+      continue;
     }
+    if (c == '\n') {
+      // Token t;
+      t.type = (int)TokenNewline;
+      if (_for_display)
+        t.addText("\r\n");
+      t.line = _token_line;
+      t.pos = pos;
+      if (increae_line)
+        _token_line++;
+      pos = 0;
+      if (_for_display)
+        _tks.push(t);
+#ifdef PARSER_DEBUG
+      if (!_for_display) {
 
-    if (script->currentChar() == EOF_TEXT)
-    {
-        if (_tks.back().getType() != TokenEndOfFile)
-        {
-            t = Token(TokenEndOfFile, EOF_VARTYPE, _token_line);
-
-            _tks.push(t);
-        }
+        printf("line;%d\n\r", _token_line);
+      }
+#endif
+      continue;
     }
-    // return list_of_token;
-    return nbReadToken - 1;
+    if (c == '?') {
+      // Token t;
+      t = Token(TokenQuestionMark, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText("?");
+      t.line = _token_line;
+      t.pos = pos;
+      //_token_line++;
+      //  pos = 0;
+      // if (_for_display)
+      _tks.push(t);
+      continue;
+    }
+    if (c == '.') {
+      // Token t;
+      t.type = (int)TokenMember;
+      if (_for_display)
+        t.addText(".");
+      t.line = _token_line;
+      t.pos = pos;
+      //_token_line++;
+      //  pos = 0;
+      // if (_for_display)
+      _tks.push(t);
+      // nbReadToken++;
+      continue;
+    }
+    if (c == '^') {
+      // Token t;
+      t.type = (int)TokenPower;
+      if (_for_display)
+        t.addText("^");
+      t.line = _token_line;
+      t.pos = pos;
+      //_token_line++;
+      //  pos = 0;
+      // if (_for_display)
+      _tks.push(t);
+      // nbReadToken++;
+      continue;
+    }
+    if (c == '@') {
+      // Token t;
+      t.type = (int)TokenUnknown;
+      if (_for_display)
+        t.addText("@");
+      _token_line = _sav_token_line;
+      if (_for_display)
+        _tks.push(t);
+      continue;
+    }
+    if (c == '\'') {
+      // Token t;
+      t.type = (int)TokenUnknown;
+      if (_for_display)
+        t.addText("\'");
+      t.line = _token_line;
+      t.pos = pos;
+      //  _token_line++;
+      //  pos = 0;
+      if (_for_display)
+        _tks.push(t);
+      continue;
+    }
+    if (c == ':') {
+      // Token t;
+      t = Token(TokenColon, EOF_VARTYPE, _token_line);
+      if (_for_display)
+        t.addText(":");
+      t.line = _token_line;
+      t.pos = pos;
+      //_token_line++;
+      //  pos = 0;
+      // if (_for_display)
+      _tks.push(t);
+      continue;
+    }
+    if (c == '*') {
+      c2 = script->nextChar();
+      if (c2 == '=') {
+        // token t;
+        // t._vartype = NULL;
+        // t.type = TokenPlusPlus;
+        t = Token(TokenStarEqual, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("*=");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        // nbReadToken++;
+        _tks.push(t);
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        // t.type = TokenAddition;
+        t = Token(TokenStar, EOF_VARTYPE, _token_line);
+        if (_for_display)
+          t.addText("*");
+        // t.line = _token_line;
+        t.pos = pos;
+        // _tks.push(t);
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+      // Token t;
+    }
+    if (c == '|') {
+      c2 = script->nextChar();
+      if (c2 == '|') {
+        t = Token(TokenDoubleOr, EOF_VARTYPE);
+        // t._vartype = NULL;
+        // t.type = TokenDoubleEqual;
+        if (_for_display)
+          t.addText("||");
+        t.line = _token_line;
+        t.pos = pos;
+        _tks.push(t);
+        nbReadToken++;
+
+        continue;
+      } else {
+        script->previousChar();
+        // token t;
+        //  t._vartype = NULL;
+        //  t.type = TokenEqual;
+        //  t.line = _token_line;
+        t = Token(TokenKeywordOr, EOF_VARTYPE, _token_line);
+        t.pos = pos;
+        if (_for_display)
+          t.addText("|");
+        _tks.push(t);
+        nbReadToken++;
+        continue;
+      }
+    }
+    if (c == ',') {
+      // Token t;
+      t._vartype = EOF_VARTYPE;
+      t.type = (int)TokenComma;
+      if (_for_display)
+        t.addText(",");
+      t.line = _token_line;
+      t.pos = pos;
+      _tks.push(t);
+      // nbReadToken++;
+      continue;
+    }
+    if (c == 27) {
+      c2 = script->nextChar();
+      continue;
+    }
+    // if (!_for_display)
+    //   printf("Error invalid character |%d| line :%d pos: %d\n", c,
+    //   _token_line, pos);
+  }
+
+  if (script->currentChar() == EOF_TEXT) {
+    if (_tks.back().getType() != TokenEndOfFile) {
+      t = Token(TokenEndOfFile, EOF_VARTYPE, _token_line);
+
+      _tks.push(t);
+    }
+  }
+  // return list_of_token;
+  return nbReadToken - 1;
 }
 
 #ifdef __CONSOLE_ESP32

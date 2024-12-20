@@ -1,12 +1,12 @@
-#include <string>
 #include <list>
+#include <string>
 #pragma once
 #ifndef __FUNCTION_LIB
 #define __FUNCTION_LIB
 
- list<int> add_on;
-//string division="";
-string _sync="\
+list<int> add_on;
+// string division="";
+string _sync = "\
 uint32_t _handle_;\n\
 __ASM__ void sync()\n\
 {\n\
@@ -16,7 +16,7 @@ __ASM__ void sync()\n\
 \"callExt a8,_sync\"\n\
 \"retw.n\" \n\
 }@";
-string division="\
+string division = "\
 __ASM__ float __div(float a,float b)\n\
 { \n\
 \"entry a1,16\" \n\
@@ -48,7 +48,7 @@ __ASM__ float __div(float a,float b)\n\
 \"retw.n\"\n\
 }@";
 
-string _rand="\
+string _rand = "\
 __ASM__ uint32_t rand(uint32_t mod) \n\
 {\n\
 \"entry a1,56\" \n\
@@ -67,7 +67,7 @@ __ASM__ uint32_t rand(uint32_t mod) \n\
 \"retw.n\" \n\
 }@";
 
-string _copycode="\
+string _copycode = "\
 __ASM__ void copy(uint8_t *dest,uint8_t *from,uint16_t size) \n\
 { \n\
    \"entry a1,80\"\n\
@@ -84,7 +84,7 @@ __ASM__ void copy(uint8_t *dest,uint8_t *from,uint16_t size) \n\
    \"bnez a7,loop\" \n\
    \"retw.n\" \n\
 }@";
-string _memset="\
+string _memset = "\
 __ASM__ void memset(uint8_t *obj,uint8_t val, uint16_t size )\n\
 {\n\
    \"entry a1,80\" \n\
@@ -100,7 +100,7 @@ __ASM__ void memset(uint8_t *obj,uint8_t val, uint16_t size )\n\
    \"retw.n\" \n\
 }@";
 
-string _millis="\
+string _millis = "\
 __ASM__ uint32_t millis()\n\
 {\n\
 \"rsr a14,234\" \n\
@@ -108,7 +108,7 @@ __ASM__ uint32_t millis()\n\
 }\n\
 @";
 
-string _fill="\
+string _fill = "\
 __ASM__ void fill(uint8_t *dest, uint8_t *obj, uint8_t objsize,uint16_t nb_iteration) \n\
 {\n\
    \"entry a1,80\" \n\
@@ -132,7 +132,7 @@ __ASM__ void fill(uint8_t *dest, uint8_t *obj, uint8_t objsize,uint16_t nb_itera
    \"retw.n\" \n\
 }@";
 
-string _arduino="\n\
+string _arduino = "\n\
 void main(){\n\
 setup();\n\
 while(2>1)\n\
@@ -141,28 +141,26 @@ loop();\n\
 }\n\
 }\n\
 ";
-string base_ext_functions="\n\
+string base_ext_functions = "\n\
 define true 1\n\
 define false 0\n\
 external void printf(char * s,Args a);\n\
 external void printfln(char * s,Args a);\n\
 @";
-string empty_header="";
-int stdlib_size=5;
-string stdlib[]={"sync","rand","copy","memset","fill","arduino"};
- string * _stdlib[]={&_sync,&_rand,&_copycode,&_memset,&_fill,&_arduino};
-string * _stdlib_header[]={&empty_header,&empty_header,&empty_header,&empty_header,&empty_header};
+string empty_header = "";
+int stdlib_size = 5;
+string stdlib[] = {"sync", "rand", "copy", "memset", "fill", "arduino"};
+string *_stdlib[] = {&_sync, &_rand, &_copycode, &_memset, &_fill, &_arduino};
+string *_stdlib_header[] = {&empty_header, &empty_header, &empty_header,
+                            &empty_header, &empty_header};
 
-int findLibFunction(string name)
-{
-    //int pos=-1;
-    for(int i=0;i<stdlib_size;i++)
-    {
-        if(stdlib[i].compare(name)==0)
-            return i;
-    }
-    return -1;
+int findLibFunction(string name) {
+  // int pos=-1;
+  for (int i = 0; i < stdlib_size; i++) {
+    if (stdlib[i].compare(name) == 0)
+      return i;
+  }
+  return -1;
 }
-
 
 #endif
